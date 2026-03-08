@@ -6,9 +6,9 @@ namespace InventoryManagement.Views;
 
 public partial class LoginView : Window
 {
-    public LoginView()
+    public LoginView(LoginViewModel vm)
     {
         InitializeComponent();
-        DataContext = new LoginViewModel();
+        DataContext = vm;
     }
 }

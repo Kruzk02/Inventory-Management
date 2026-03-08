@@ -2,6 +2,8 @@
 using System.Net;
 using System.Net.Http;
 using System.Windows;
+using InventoryManagement.Services;
+using InventoryManagement.ViewModels;
 using InventoryManagement.Views;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -29,8 +31,16 @@ public partial class App : Application
                 CookieContainer = new CookieContainer()
             }
         );
+
+        services.AddSingleton<AuthService>();
+        
+        services.AddTransient<LoginViewModel>();
+        services.AddTransient<LoginView>();
         
         Services = services.BuildServiceProvider();
+        
+        var view = Services.GetRequiredService<LoginView>();
+        view.Show();
         
         base.OnStartup(e);
     }

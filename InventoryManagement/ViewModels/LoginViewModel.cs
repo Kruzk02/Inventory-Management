@@ -12,7 +12,7 @@ public sealed class LoginViewModel : INotifyPropertyChanged
 {
     private string _username = null!;
 
-    private readonly AuthService _authService = new();
+    private readonly AuthService _authService;
 
     public string Username
     {
@@ -26,8 +26,9 @@ public sealed class LoginViewModel : INotifyPropertyChanged
     
     public ICommand LoginCommand { get; }
 
-    public LoginViewModel()
+    public LoginViewModel(AuthService authService)
     {
+        _authService = authService;
         LoginCommand = new RelayCommand(Login);
     }
 
