@@ -29,17 +29,19 @@ public sealed class LoginViewModel : INotifyPropertyChanged
     public LoginViewModel(IAuthService authService)
     {
         _authService = authService;
-        LoginCommand = new RelayCommand(Login);
+        LoginCommand = new AsyncRelayCommand(Login);
     }
 
-    private void Login(object? parameter)
+    private async Task Login(object? parameter)
     {
         if (parameter is not PasswordBox passwordBox)
             return;
 
-        var success = _authService.Login(Username, passwordBox.Password);
+        var response = await _authService.Login(Username, passwordBox.Password);
 
-        MessageBox.Show(success.Result!.AccessToken != null ? "Login successful" : "Invalid credentials");
+        MessageBox.Show(response?.AccessToken != null 
+            ? "Login successful" 
+            : "Invalid credentials");
     }
     
     public event PropertyChangedEventHandler? PropertyChanged;
