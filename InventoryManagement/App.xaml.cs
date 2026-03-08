@@ -14,7 +14,7 @@ namespace InventoryManagement;
 /// </summary>
 public partial class App : Application
 {
-    public static IServiceProvider? Services { get; private set; }
+    private static IServiceProvider? Services { get; set; }
 
     protected override void OnStartup(StartupEventArgs e)
     {
@@ -22,7 +22,7 @@ public partial class App : Application
 
         services.AddHttpClient("api", client =>
         {
-            client.BaseAddress = new Uri("https://localhost:80");
+            client.BaseAddress = new Uri("http://localhost:80/");
         })
         .ConfigurePrimaryHttpMessageHandler(() =>
             new HttpClientHandler
@@ -32,7 +32,7 @@ public partial class App : Application
             }
         );
 
-        services.AddSingleton<AuthService>();
+        services.AddSingleton<IAuthService, AuthService>();
         
         services.AddTransient<LoginViewModel>();
         services.AddTransient<LoginView>();

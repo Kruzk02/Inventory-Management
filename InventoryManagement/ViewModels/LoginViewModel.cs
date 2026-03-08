@@ -12,7 +12,7 @@ public sealed class LoginViewModel : INotifyPropertyChanged
 {
     private string _username = null!;
 
-    private readonly AuthService _authService;
+    private readonly IAuthService _authService;
 
     public string Username
     {
@@ -26,7 +26,7 @@ public sealed class LoginViewModel : INotifyPropertyChanged
     
     public ICommand LoginCommand { get; }
 
-    public LoginViewModel(AuthService authService)
+    public LoginViewModel(IAuthService authService)
     {
         _authService = authService;
         LoginCommand = new RelayCommand(Login);
@@ -39,7 +39,7 @@ public sealed class LoginViewModel : INotifyPropertyChanged
 
         var success = _authService.Login(Username, passwordBox.Password);
 
-        MessageBox.Show(success ? "Login successful" : "Invalid credentials");
+        MessageBox.Show(success.Result!.AccessToken != null ? "Login successful" : "Invalid credentials");
     }
     
     public event PropertyChangedEventHandler? PropertyChanged;
