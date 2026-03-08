@@ -1,4 +1,6 @@
 ﻿
+using System.Net;
+using System.Net.Http;
 using System.Windows;
 using InventoryManagement.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +21,14 @@ public partial class App : Application
         services.AddHttpClient("api", client =>
         {
             client.BaseAddress = new Uri("https://localhost:80");
-        });
+        })
+        .ConfigurePrimaryHttpMessageHandler(() =>
+            new HttpClientHandler
+            {
+                UseCookies = true,
+                CookieContainer = new CookieContainer()
+            }
+        );
         
         Services = services.BuildServiceProvider();
         
