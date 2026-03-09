@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Json;
 using InventoryManagement.Dto;
+using InventoryManagement.Models;
 
 namespace InventoryManagement.Services;
 
@@ -17,5 +18,16 @@ public class AuthService(IHttpClientFactory httpClientFactory) : IAuthService
             return null;
         
         return await response.Content.ReadFromJsonAsync<LoginResponse>();
+    }
+
+    public async Task<User?> GetUserInfoByUsername(string username)
+    {
+        var client = httpClientFactory.CreateClient("api");
+        var response = await client.GetAsync($"user?usernameOrEmail={username}");
+
+        if (!response.IsSuccessStatusCode)
+            return null;
+        
+        return await response.Content.ReadFromJsonAsync<User>();
     }
 }
