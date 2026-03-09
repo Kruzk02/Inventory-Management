@@ -10,25 +10,25 @@ namespace InventoryManagement.ViewModels;
 
 public sealed class LoginViewModel : INotifyPropertyChanged
 {
-    private string _username = null!;
-
     private readonly IAuthService _authService;
+    private readonly AuthState _authState;
 
     public string Username
     {
-        get => _username;
-        set
+        get;
+        init
         {
-            _username = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
-    
+    } = null!;
+
     public ICommand LoginCommand { get; }
 
-    public LoginViewModel(IAuthService authService)
+    public LoginViewModel(IAuthService authService, AuthState authState)
     {
         _authService = authService;
+        _authState = authState;
         LoginCommand = new AsyncRelayCommand(Login);
     }
 
@@ -39,9 +39,16 @@ public sealed class LoginViewModel : INotifyPropertyChanged
 
         var response = await _authService.Login(Username, passwordBox.Password);
 
-        MessageBox.Show(response?.Token != null 
-            ? "Login successful" 
-            : "Invalid credentials");
+        var token = response?.Token;
+        
+        if (token == null)
+        {
+            MessageBox.Show("Invalid credentials");
+            return;
+        }
+
+        _authState.SetAccessToken(token);
+        MessageBox.Show("Login Successful");
     }
     
     public event PropertyChangedEventHandler? PropertyChanged;

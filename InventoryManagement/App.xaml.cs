@@ -24,6 +24,7 @@ public partial class App : Application
         {
             client.BaseAddress = new Uri("http://localhost:80/");
         })
+        .AddHttpMessageHandler<AuthHandler>()
         .ConfigurePrimaryHttpMessageHandler(() =>
             new HttpClientHandler
             {
@@ -32,6 +33,8 @@ public partial class App : Application
             }
         );
 
+        services.AddSingleton<AuthState>();
+        services.AddSingleton<AuthHandler>();
         services.AddSingleton<IAuthService, AuthService>();
         
         services.AddTransient<LoginViewModel>();
