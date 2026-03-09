@@ -6,6 +6,13 @@
         xmlns:local="clr-namespace:InventoryManagement"
         mc:Ignorable="d"
         Title="Inventory Management"
-        WindowState="Maximized"
-        >
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized">
+    <Grid>
+        <Frame x:Name="MainFrame"
+               NavigationUIVisibility="Hidden"
+               HorizontalContentAlignment="Stretch"
+               VerticalContentAlignment="Stretch" />
+    </Grid>
+
 </Window>

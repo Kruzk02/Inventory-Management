@@ -1,14 +1,13 @@
-﻿using System.Windows;
-using System.Windows.Input;
+﻿using System.Windows.Controls;
 using InventoryManagement.ViewModels;
 
 namespace InventoryManagement.Views;
 
-public partial class LoginView : Window
+public partial class LoginView : Page
 {
-    public LoginView(LoginViewModel vm)
+    public LoginView(LoginViewModel viewModel)
     {
         InitializeComponent();
-        DataContext = vm;
+        DataContext = viewModel;
     }
 }

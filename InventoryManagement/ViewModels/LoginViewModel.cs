@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using InventoryManagement.Commands;
 using InventoryManagement.Services;
+using InventoryManagement.Views;
 
 namespace InventoryManagement.ViewModels;
 
@@ -12,6 +13,7 @@ public sealed class LoginViewModel : INotifyPropertyChanged
 {
     private readonly IAuthService _authService;
     private readonly AuthState _authState;
+    private readonly NavigationService _navigationService;
 
     public string Username
     {
@@ -25,10 +27,12 @@ public sealed class LoginViewModel : INotifyPropertyChanged
 
     public ICommand LoginCommand { get; }
 
-    public LoginViewModel(IAuthService authService, AuthState authState)
+    public LoginViewModel(IAuthService authService, AuthState authState, NavigationService navigationService)
     {
         _authService = authService;
         _authState = authState;
+        _navigationService = navigationService;
+        
         LoginCommand = new AsyncRelayCommand(Login);
     }
 

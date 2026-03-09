@@ -33,18 +33,26 @@ public partial class App : Application
             }
         );
 
+        ConfigureServices(services);
+        
+        Services = services.BuildServiceProvider();
+        
+        var mainWindow = Services.GetRequiredService<MainWindow>();
+        mainWindow.Show();
+        
+        base.OnStartup(e);
+    }
+
+    private static void ConfigureServices(IServiceCollection services)
+    {
+        services.AddSingleton<MainWindow>();
+        services.AddSingleton<NavigationService>();
         services.AddSingleton<AuthState>();
         services.AddSingleton<AuthHandler>();
         services.AddSingleton<IAuthService, AuthService>();
         
         services.AddTransient<LoginViewModel>();
         services.AddTransient<LoginView>();
-        
-        Services = services.BuildServiceProvider();
-        
-        var view = Services.GetRequiredService<LoginView>();
-        view.Show();
-        
-        base.OnStartup(e);
+        services.AddTransient<MainWindow>();
     }
 }

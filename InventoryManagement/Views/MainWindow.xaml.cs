@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using InventoryManagement.Services;
 
 namespace InventoryManagement.Views;
 
@@ -7,8 +8,10 @@ namespace InventoryManagement.Views;
 /// </summary>
 public partial class MainWindow : Window
 {
-    public MainWindow()
+    public MainWindow(NavigationService navigation)
     {
         InitializeComponent();
+        navigation.SetFrame(MainFrame);
+        navigation.Navigate<LoginView>();
     }
 }
