@@ -5,15 +5,13 @@ namespace InventoryManagement.Commands;
 
 public class AsyncRelayCommand(Func<object?, Task> execute) : ICommand
 {
-    private readonly Func<object?, Task> _execute = execute;
-    
     public bool CanExecute(object? parameter) => true;
 
     public async void Execute(object? parameter)
     {
         try
         {
-            await _execute(parameter);
+            await execute(parameter);
         }
         catch (Exception ex)
         {

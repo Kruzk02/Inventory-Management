@@ -39,7 +39,7 @@ public sealed class LoginViewModel : INotifyPropertyChanged
 
         var response = await _authService.Login(Username, passwordBox.Password);
 
-        MessageBox.Show(response?.AccessToken != null 
+        MessageBox.Show(response?.Token != null 
             ? "Login successful" 
             : "Invalid credentials");
     }
