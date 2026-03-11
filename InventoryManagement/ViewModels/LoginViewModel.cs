@@ -53,6 +53,7 @@ public sealed class LoginViewModel : INotifyPropertyChanged
 
         _authState.SetAccessToken(token);
         MessageBox.Show("Login Successful");
+        _navigationService.Navigate<InventoryView>();
     }
     
     public event PropertyChangedEventHandler? PropertyChanged;
