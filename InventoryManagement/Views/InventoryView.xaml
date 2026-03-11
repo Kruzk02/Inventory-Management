@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:InventoryManagement.Views"
+      xmlns:helper="clr-namespace:InventoryManagement.Helper"
       mc:Ignorable="d"
       Title="Inventory"
       d:DataContext="{d:DesignInstance}">
@@ -42,8 +42,9 @@
             <TextBox
                 Width="200"
                 Height="20"
-                Margin="0,0,10,0">
-
+                Margin="0,0,10,0"
+                helper:TextBoxHelper.Placeholder="Milk"
+                >
             </TextBox>
 
             <Button
