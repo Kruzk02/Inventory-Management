@@ -6,14 +6,12 @@ namespace InventoryManagement.Services;
 
 public class InventoryService(IHttpClientFactory httpClientFactory) : IInventoryService
 {
-    public async Task<Inventory?> GetAllInventories()
+    public async Task<IEnumerable<Inventory>> GetAllInventories()
     {
         var client = httpClientFactory.CreateClient("api");
 
         var response = await client.GetAsync("inventory");
         
-        if (!response.IsSuccessStatusCode)
-            return null;
-        return await response.Content.ReadFromJsonAsync<Inventory>();
+        return (await response.Content.ReadFromJsonAsync<IEnumerable<Inventory>>()) ?? [];
     }
 }
