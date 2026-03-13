@@ -60,7 +60,7 @@
             Grid.Row="2"
             CanUserResizeColumns="true"
             AutoGenerateColumns="False"
-            ItemsSource="{Binding Items}"
+            ItemsSource="{Binding Inventories}"
             IsReadOnly="True">
             <DataGrid.Columns>
 
@@ -72,19 +72,19 @@
 
                 <DataGridTextColumn
                     Header="Item"
-                    Binding="{Binding Name}"
+                    Binding="{Binding Product.Name}"
                     Width="3*"
                     MaxWidth="500" />
 
                 <DataGridTextColumn
                     Header="Category"
-                    Binding="{Binding Category}"
+                    Binding="{Binding Product.Category.Name}"
                     Width="2*"
                     MaxWidth="500" />
 
                 <DataGridTextColumn
                     Header="Price"
-                    Binding="{Binding Price}"
+                    Binding="{Binding Product.Price}"
                     Width="1*"
                     MaxWidth="500" />
 

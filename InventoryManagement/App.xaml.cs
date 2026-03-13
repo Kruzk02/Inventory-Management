@@ -54,6 +54,7 @@ public partial class App : Application
         
         services.AddTransient<LoginViewModel>();
         services.AddTransient<LoginView>();
+        services.AddTransient<InventoryViewModel>();
         services.AddTransient<InventoryView>();
         services.AddTransient<MainWindow>();
     }
