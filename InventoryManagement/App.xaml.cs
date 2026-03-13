@@ -50,6 +50,7 @@ public partial class App : Application
         services.AddSingleton<AuthState>();
         services.AddSingleton<AuthHandler>();
         services.AddSingleton<IAuthService, AuthService>();
+        services.AddSingleton<IInventoryService, InventoryService>();
         
         services.AddTransient<LoginViewModel>();
         services.AddTransient<LoginView>();
