@@ -4,5 +4,5 @@ namespace InventoryManagement.Services;
 
 public interface IInventoryService
 {
-    Task<IEnumerable<Inventory>> GetAllInventories();
+    Task<IEnumerable<Inventory>> GetAllInventories(int skip, int take);
 }
