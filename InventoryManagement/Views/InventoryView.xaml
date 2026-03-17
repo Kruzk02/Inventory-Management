@@ -17,7 +17,7 @@
                 <GradientStop Color="#2B2B2B" Offset="1" />
             </LinearGradientBrush>
         </Grid.Background>
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -43,8 +43,7 @@
                 Width="200"
                 Height="20"
                 Margin="0,0,10,0"
-                helper:TextBoxHelper.Placeholder="Milk"
-                >
+                helper:TextBoxHelper.Placeholder="Milk">
             </TextBox>
 
             <Button
@@ -58,47 +57,45 @@
 
         <DataGrid
             Grid.Row="2"
-            CanUserResizeColumns="true"
+            ScrollViewer.VerticalScrollBarVisibility="Auto"
+            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+            RowHeight="32"
+            ColumnHeaderHeight="36"
             AutoGenerateColumns="False"
             ItemsSource="{Binding Inventories}"
-            IsReadOnly="True">
+            IsReadOnly="True"
+            >
             <DataGrid.Columns>
 
                 <DataGridTextColumn
                     Header="Id"
                     Binding="{Binding Id}"
-                    Width="1*"
-                    MaxWidth="500" />
+                    Width="Auto"/>
 
                 <DataGridTextColumn
                     Header="Item"
                     Binding="{Binding Product.Name}"
-                    Width="3*"
-                    MaxWidth="500" />
+                    Width="*"/>
 
                 <DataGridTextColumn
                     Header="Category"
                     Binding="{Binding Product.Category.Name}"
-                    Width="2*"
-                    MaxWidth="500" />
+                    Width="*"/>
 
                 <DataGridTextColumn
                     Header="Price"
-                    Binding="{Binding Product.Price}"
-                    Width="1*"
-                    MaxWidth="500" />
+                    Binding="{Binding Product.Price, StringFormat=C}"
+                    Width="Auto"/>
 
                 <DataGridTextColumn
                     Header="Stock"
                     Binding="{Binding Stock}"
-                    Width="1*"
-                    MaxWidth="500" />
+                    Width="Auto"/>
 
                 <DataGridTextColumn
                     Header="Updated"
-                    Binding="{Binding UpdatedAt}"
-                    Width="2*"
-                    MaxWidth="500" />
+                    Binding="{Binding UpdatedAt, StringFormat=yyyy-MM-dd HH:mm}"
+                    Width="*"/>
 
             </DataGrid.Columns>
         </DataGrid>
