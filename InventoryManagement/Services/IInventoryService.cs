@@ -1,8 +1,9 @@
-﻿using InventoryManagement.Models;
+﻿using InventoryManagement.Dto;
+using InventoryManagement.Models;
 
 namespace InventoryManagement.Services;
 
 public interface IInventoryService
 {
-    Task<IEnumerable<Inventory>> GetAllInventories(int skip, int take);
+    Task<InventoryReponse?> GetAllInventories(int skip, int take);
 }

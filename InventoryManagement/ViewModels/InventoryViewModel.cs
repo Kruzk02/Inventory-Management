@@ -11,6 +11,8 @@ namespace InventoryManagement.ViewModels;
 public class InventoryViewModel : INotifyPropertyChanged
 {
     private readonly IInventoryService _inventoryService;
+    private int _totalData;
+    private int _totalPages;
 
     public ObservableCollection<Inventory> Inventories { get; set; } = [];
     public ICommand NextCommand { get; }
@@ -19,10 +21,28 @@ public class InventoryViewModel : INotifyPropertyChanged
     public int Page
     {
         get;
-        set => SetField(ref field, value);
+        set
+        {
+            SetField(ref field, value);
+            OnPropertyChanged(nameof(PageDisplay));    
+        }
     } = 1;
 
     public int Take { get; set; } = 50;
+    
+    public int TotalUnits
+    {
+        get => _totalData;
+        set => SetField(ref _totalData, value);
+    }
+
+    public int TotalPages
+    {
+        get => _totalPages;
+        set => SetField(ref _totalData, value);
+    }
+
+    public string PageDisplay => $"{Page} / {TotalPages}";
     
     public InventoryViewModel(IInventoryService invService)
     {
@@ -36,17 +56,16 @@ public class InventoryViewModel : INotifyPropertyChanged
 
     private void NextPage(object? parameter)
     {
+        if (Page >= TotalPages) return;
         Page++;
         _ = LoadInventories(Take, (Page - 1) * Take);
     }
 
     private void PreviousPage(object? parameter)
     {
-        if (Page > 1)
-        {
-            Page--;
-            _ = LoadInventories(Take, (Page - 1) * Take);    
-        }
+        if (Page <= 1) return;
+        Page--;
+        _ = LoadInventories(Take, (Page - 1) * Take);
     }
 
     private async Task LoadInventories(int take, int skip)
@@ -55,9 +74,15 @@ public class InventoryViewModel : INotifyPropertyChanged
         
         var items = await _inventoryService.GetAllInventories(skip, take);
 
-        foreach (var item in items)
+        if (items != null)
         {
-            Inventories.Add(item);
+            foreach (var item in items.Data)
+            {
+                Inventories.Add(item);
+            }
+
+            _totalData = items.Total;
+            _totalPages = _totalData / take + 1;
         }
     }
 

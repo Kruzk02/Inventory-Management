@@ -106,7 +106,7 @@
                     Width="80"
                     Margin="5"
                     Command="{Binding PreviousCommand}" />
-            <TextBlock Text="{Binding Page}"
+            <TextBlock Text="{Binding PageDisplay}"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        VerticalAlignment="Center"
                        Margin="10,0" />
