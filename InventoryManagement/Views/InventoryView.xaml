@@ -40,10 +40,12 @@
             Margin="0,0,0,10">
 
             <TextBox
+                x:Name="SearchBox"
                 Width="200"
                 Height="20"
                 Margin="0,0,10,0"
-                helper:TextBoxHelper.Placeholder="Milk">
+                helper:TextBoxHelper.Placeholder="Milk"
+                Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}">
             </TextBox>
 
             <Button

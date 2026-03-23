@@ -8,11 +8,12 @@ using InventoryManagement.Services;
 
 namespace InventoryManagement.ViewModels;
 
-public class InventoryViewModel : INotifyPropertyChanged
+public sealed class InventoryViewModel : INotifyPropertyChanged
 {
     private readonly IInventoryService _inventoryService;
     private int _totalData;
     private int _totalPages;
+    private string? _searchQuery;
 
     public ObservableCollection<Inventory> Inventories { get; set; } = [];
     public ICommand NextCommand { get; }
@@ -29,7 +30,19 @@ public class InventoryViewModel : INotifyPropertyChanged
     } = 1;
 
     public int Take { get; set; } = 50;
-    
+
+    public string? SearchQuery
+    {
+        get => _searchQuery;
+        set
+        {
+            if (!SetField(ref _searchQuery, value)) return;
+            Page = 1;
+            Task.Delay(500);
+            _ = LoadInventories(_searchQuery, Take, (Page - 1) * Take);
+        }
+    }
+
     public int TotalUnits
     {
         get => _totalData;
@@ -39,7 +52,7 @@ public class InventoryViewModel : INotifyPropertyChanged
     public int TotalPages
     {
         get => _totalPages;
-        set => SetField(ref _totalData, value);
+        set => SetField(ref _totalPages, value);
     }
 
     public string PageDisplay => $"{Page} / {TotalPages}";
@@ -51,28 +64,28 @@ public class InventoryViewModel : INotifyPropertyChanged
         NextCommand = new RelayCommand(NextPage);
         PreviousCommand = new RelayCommand(PreviousPage);
         
-        _ = LoadInventories(Take, (Page - 1) * Take);
+        _ = LoadInventories(_searchQuery, Take, (Page - 1) * Take);
     }
 
     private void NextPage(object? parameter)
     {
         if (Page >= TotalPages) return;
         Page++;
-        _ = LoadInventories(Take, (Page - 1) * Take);
+        _ = LoadInventories(_searchQuery, Take, (Page - 1) * Take);
     }
 
     private void PreviousPage(object? parameter)
     {
         if (Page <= 1) return;
         Page--;
-        _ = LoadInventories(Take, (Page - 1) * Take);
+        _ = LoadInventories(_searchQuery, Take, (Page - 1) * Take);
     }
 
-    private async Task LoadInventories(int take, int skip)
+    private async Task LoadInventories(string? productName, int take, int skip)
     {
         Inventories.Clear();
         
-        var items = await _inventoryService.GetAllInventories(skip, take);
+        var items = await _inventoryService.GetAllInventories(productName, skip, take);
 
         if (items != null)
         {
@@ -81,19 +94,20 @@ public class InventoryViewModel : INotifyPropertyChanged
                 Inventories.Add(item);
             }
 
-            _totalData = items.Total;
-            _totalPages = _totalData / take + 1;
+            SetField(ref _totalData, items.Total);
+            SetField(ref _totalPages, (_totalData + take - 1) / take);
+            OnPropertyChanged(nameof(PageDisplay));
         }
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value)) return false;
         field = value;

@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Controls;
+using InventoryManagement.Models;
 using InventoryManagement.ViewModels;
 
 namespace InventoryManagement.Views;
