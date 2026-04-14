@@ -6,5 +6,5 @@ namespace InventoryManagement.Services;
 public interface IAuthService
 {
     Task<LoginResponse?> Login(string username, string password);
-    Task<User?> GetCurrentUserInfo(string accessToken);
+    Task<User?> GetCurrentUserInfo();
 }

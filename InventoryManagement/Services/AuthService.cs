@@ -20,7 +20,7 @@ public class AuthService(IHttpClientFactory httpClientFactory) : IAuthService
         return await response.Content.ReadFromJsonAsync<LoginResponse>();
     }
 
-    public async Task<User?> GetCurrentUserInfo(string username)
+    public async Task<User?> GetCurrentUserInfo()
     {
         var client = httpClientFactory.CreateClient("api");
         var response = await client.GetAsync($"user");
