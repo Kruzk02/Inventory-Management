@@ -11,6 +11,7 @@ namespace InventoryManagement.ViewModels;
 public sealed class InventoryViewModel : INotifyPropertyChanged
 {
     private readonly IInventoryService _inventoryService;
+    private Task Reload() => LoadInventories(_searchQuery, Take, (Page - 1) * Take);
     private int _totalData;
     private int _totalPages;
     private string? _searchQuery;
@@ -27,7 +28,7 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
         set
         {
             SetField(ref field, value);
-            OnPropertyChanged(nameof(PageDisplay));    
+            OnPropertyChanged(nameof(PageDisplay));
         }
     } = 1;
 
@@ -39,7 +40,7 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
         set
         {
             if (!SetField(ref _searchQuery, value)) return;
-            
+
             Page = 1;
 
             _cts?.Cancel();
@@ -62,35 +63,35 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
     }
 
     public string PageDisplay => $"{Page} / {TotalPages}";
-    
+
     public bool IsLoading
     {
         get => _isLoading;
         set => SetField(ref _isLoading, value);
     }
-    
+
     public InventoryViewModel(IInventoryService invService)
     {
         _inventoryService = invService;
 
         NextCommand = new RelayCommand(NextPage);
         PreviousCommand = new RelayCommand(PreviousPage);
-        
-        _ = LoadInventories(_searchQuery, Take, (Page - 1) * Take);
+
+        _ = Reload();
     }
 
     private void NextPage(object? parameter)
     {
         if (Page >= TotalPages) return;
         Page++;
-        _ = LoadInventories(_searchQuery, Take, (Page - 1) * Take);
+        _ = Reload();
     }
 
     private void PreviousPage(object? parameter)
     {
         if (Page <= 1) return;
         Page--;
-        _ = LoadInventories(_searchQuery, Take, (Page - 1) * Take);
+        _ = Reload();
     }
 
     private async Task LoadInventories(string? productName, int take, int skip)
@@ -98,7 +99,7 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
         try
         {
             IsLoading = true;
-            
+
             var minDelay = Task.Delay(300);
             var items = await _inventoryService.GetAllInventories(productName, skip, take);
 
@@ -117,15 +118,17 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
             IsLoading = false;
         }
     }
-    
+
     private async Task DebouncedSearch(CancellationToken token)
     {
         try
         {
             await Task.Delay(500, token);
-            await LoadInventories(_searchQuery, Take, (Page - 1) * Take);
+            await Reload();
         }
-        catch (TaskCanceledException) { }
+        catch (TaskCanceledException)
+        {
+        }
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
