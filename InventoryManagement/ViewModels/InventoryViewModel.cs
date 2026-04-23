@@ -27,8 +27,8 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
         get;
         set
         {
-            SetField(ref field, value);
-            OnPropertyChanged(nameof(PageDisplay));
+            if (SetField(ref field, value))
+                OnPropertyChanged(nameof(PageDisplay));
         }
     } = 1;
 
@@ -59,7 +59,13 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
     public int TotalPages
     {
         get => _totalPages;
-        set => SetField(ref _totalPages, value);
+        set
+        {
+            if (SetField(ref _totalPages, value))
+            {
+                OnPropertyChanged(nameof(PageDisplay));
+            }
+        }
     }
 
     public string PageDisplay => $"{Page} / {TotalPages}";
@@ -109,8 +115,8 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
                 Inventories = new ObservableCollection<Inventory>(items.Data);
                 OnPropertyChanged(nameof(Inventories));
 
-                SetField(ref _totalData, items.Total);
-                SetField(ref _totalPages, (_totalData + take - 1) / take);
+                TotalUnits = items.Total;
+                TotalPages = (items.Total + take - 1) / take;
             }
         }
         finally
