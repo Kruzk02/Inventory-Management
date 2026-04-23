@@ -60,7 +60,12 @@
                 AutoGenerateColumns="False"
                 ItemsSource="{Binding Inventories}"
                 IsReadOnly="True"
-                CanUserSortColumns="True">
+                CanUserSortColumns="True"
+                SelectedItem="{Binding SelectedInventory, Mode=TwoWay}">
+                <DataGrid.InputBindings>
+                    <MouseBinding Gesture="LeftDoubleClick"
+                                  Command="{Binding OpenDetailsCommand}" />
+                </DataGrid.InputBindings>
                 <DataGrid.Columns>
 
                     <DataGridTextColumn

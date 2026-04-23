@@ -5,6 +5,7 @@ using System.Windows.Input;
 using InventoryManagement.Commands;
 using InventoryManagement.Models;
 using InventoryManagement.Services;
+using InventoryManagement.Views;
 
 namespace InventoryManagement.ViewModels;
 
@@ -18,6 +19,17 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
     public ObservableCollection<Inventory> Inventories { get; set; } = [];
     public RelayCommand NextCommand { get; }
     public RelayCommand PreviousCommand { get; }
+    public ICommand OpenDetailsCommand { get; }
+
+    public Inventory? SelectedInventory
+    {
+        get;
+        set
+        {
+            field = value;
+            OnPropertyChanged();
+        }
+    }
 
     public int Page
     {
@@ -25,9 +37,9 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
         set
         {
             if (!SetField(ref field, value)) return;
-            
+
             OnPropertyChanged(nameof(PageDisplay));
-            
+
             NextCommand.RaiseCanExecuteChanged();
             PreviousCommand.RaiseCanExecuteChanged();
         }
@@ -83,6 +95,24 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
 
         NextCommand = new RelayCommand(_ => NextPage(), _ => Page < TotalPages);
         PreviousCommand = new RelayCommand(_ => PreviousPage(), _ => Page > 1);
+        OpenDetailsCommand = new RelayCommand(_ => OpenDetails(), _ => SelectedInventory != null);
+
+        _ = Reload();
+    }
+
+    private void OpenDetails()
+    {
+        if (SelectedInventory != null)
+        {
+            var vm = new InventoryDetailViewModel(SelectedInventory);
+
+            var window = new InventoryDetailView
+            {
+                DataContext = vm
+            };
+
+            window.ShowDialog();
+        }
 
         _ = Reload();
     }
@@ -118,7 +148,7 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
 
                 TotalUnits = items.Total;
                 TotalPages = (items.Total + take - 1) / take;
-                
+
                 NextCommand.RaiseCanExecuteChanged();
                 PreviousCommand.RaiseCanExecuteChanged();
             }
