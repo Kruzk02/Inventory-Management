@@ -47,14 +47,6 @@
                 helper:TextBoxHelper.Placeholder="Milk"
                 Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}">
             </TextBox>
-
-            <Button
-                Content="Add item"
-                Width="100"
-                Margin="0,0,10,0" />
-            <Button Content="Refresh"
-                    Width="100" />
-
         </StackPanel>
 
         <DataGrid
