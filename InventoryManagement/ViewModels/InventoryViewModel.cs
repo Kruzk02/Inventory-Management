@@ -12,10 +12,7 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
 {
     private readonly IInventoryService _inventoryService;
     private Task Reload() => LoadInventories(_searchQuery, Take, (Page - 1) * Take);
-    private int _totalData;
-    private int _totalPages;
     private string? _searchQuery;
-    private bool _isLoading;
     private CancellationTokenSource? _cts;
 
     public ObservableCollection<Inventory> Inventories { get; set; } = [];
@@ -52,16 +49,16 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
 
     public int TotalUnits
     {
-        get => _totalData;
-        set => SetField(ref _totalData, value);
+        get;
+        set => SetField(ref field, value);
     }
 
     public int TotalPages
     {
-        get => _totalPages;
+        get;
         set
         {
-            if (SetField(ref _totalPages, value))
+            if (SetField(ref field, value))
             {
                 OnPropertyChanged(nameof(PageDisplay));
             }
@@ -72,8 +69,8 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
 
     public bool IsLoading
     {
-        get => _isLoading;
-        set => SetField(ref _isLoading, value);
+        get;
+        set => SetField(ref field, value);
     }
 
     public InventoryViewModel(IInventoryService invService)
