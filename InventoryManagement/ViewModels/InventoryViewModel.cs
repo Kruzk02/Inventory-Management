@@ -16,16 +16,20 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
     private CancellationTokenSource? _cts;
 
     public ObservableCollection<Inventory> Inventories { get; set; } = [];
-    public ICommand NextCommand { get; }
-    public ICommand PreviousCommand { get; }
+    public RelayCommand NextCommand { get; }
+    public RelayCommand PreviousCommand { get; }
 
     public int Page
     {
         get;
         set
         {
-            if (SetField(ref field, value))
-                OnPropertyChanged(nameof(PageDisplay));
+            if (!SetField(ref field, value)) return;
+            
+            OnPropertyChanged(nameof(PageDisplay));
+            
+            NextCommand.RaiseCanExecuteChanged();
+            PreviousCommand.RaiseCanExecuteChanged();
         }
     } = 1;
 
@@ -77,20 +81,20 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
     {
         _inventoryService = invService;
 
-        NextCommand = new RelayCommand(NextPage);
-        PreviousCommand = new RelayCommand(PreviousPage);
+        NextCommand = new RelayCommand(_ => NextPage(), _ => Page < TotalPages);
+        PreviousCommand = new RelayCommand(_ => PreviousPage(), _ => Page > 1);
 
         _ = Reload();
     }
 
-    private void NextPage(object? parameter)
+    private void NextPage()
     {
         if (Page >= TotalPages) return;
         Page++;
         _ = Reload();
     }
 
-    private void PreviousPage(object? parameter)
+    private void PreviousPage()
     {
         if (Page <= 1) return;
         Page--;
@@ -114,6 +118,9 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
 
                 TotalUnits = items.Total;
                 TotalPages = (items.Total + take - 1) / take;
+                
+                NextCommand.RaiseCanExecuteChanged();
+                PreviousCommand.RaiseCanExecuteChanged();
             }
         }
         finally
