@@ -7,115 +7,137 @@
       mc:Ignorable="d"
       Title="Inventory"
       d:DataContext="{d:DesignInstance}">
-    <Grid HorizontalAlignment="Stretch"
-          VerticalAlignment="Stretch"
-          Margin="12">
+    <Grid>
+        <Grid x:Name="MainContent"
+              Opacity="{Binding IsLoading, Converter={StaticResource LoadingOpacityConverter}}"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              Margin="12">
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#1F1F1F" Offset="0" />
+                    <GradientStop Color="#2B2B2B" Offset="1" />
+                </LinearGradientBrush>
+            </Grid.Background>
 
-        <Grid.Background>
-            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="#1F1F1F" Offset="0" />
-                <GradientStop Color="#2B2B2B" Offset="1" />
-            </LinearGradientBrush>
-        </Grid.Background>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+            <TextBlock
+                Grid.Row="0"
+                FontSize="24"
+                FontWeight="Bold"
+                Margin="0,0,0,10"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+                Inventory
+            </TextBlock>
 
-        <TextBlock
-            Grid.Row="0"
-            FontSize="24"
-            FontWeight="Bold"
-            Margin="0,0,0,10"
-            Foreground="{DynamicResource TextFillColorPrimaryBrush}">
-            Inventory
-        </TextBlock>
+            <StackPanel
+                Grid.Row="1"
+                Orientation="Horizontal"
+                Margin="0,0,0,10">
 
-        <StackPanel
-            Grid.Row="1"
-            Orientation="Horizontal"
-            Margin="0,0,0,10">
+                <TextBox
+                    x:Name="SearchBox"
+                    Width="200"
+                    Height="20"
+                    Margin="0,0,10,0"
+                    helper:TextBoxHelper.Placeholder="Milk"
+                    Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}">
+                </TextBox>
+            </StackPanel>
 
-            <TextBox
-                x:Name="SearchBox"
-                Width="200"
-                Height="20"
-                Margin="0,0,10,0"
-                helper:TextBoxHelper.Placeholder="Milk"
-                Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}">
-            </TextBox>
-        </StackPanel>
+            <DataGrid
+                Grid.Row="2"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                RowHeight="32"
+                ColumnHeaderHeight="36"
+                AutoGenerateColumns="False"
+                ItemsSource="{Binding Inventories}"
+                IsReadOnly="True"
+                CanUserSortColumns="True">
+                <DataGrid.Columns>
 
-        <DataGrid
-            Grid.Row="2"
-            ScrollViewer.VerticalScrollBarVisibility="Auto"
-            ScrollViewer.HorizontalScrollBarVisibility="Auto"
-            RowHeight="32"
-            ColumnHeaderHeight="36"
-            AutoGenerateColumns="False"
-            ItemsSource="{Binding Inventories}"
-            IsReadOnly="True">
-            <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Header="Id"
+                        Binding="{Binding Id}"
+                        Width="Auto" />
 
-                <DataGridTextColumn
-                    Header="Id"
-                    Binding="{Binding Id}"
-                    Width="Auto" />
+                    <DataGridTextColumn
+                        Header="Item"
+                        Binding="{Binding Product.Name}"
+                        Width="*" />
 
-                <DataGridTextColumn
-                    Header="Item"
-                    Binding="{Binding Product.Name}"
-                    Width="*" />
+                    <DataGridTextColumn
+                        Header="Category"
+                        Binding="{Binding Product.Category.Name}"
+                        Width="*" />
 
-                <DataGridTextColumn
-                    Header="Category"
-                    Binding="{Binding Product.Category.Name}"
-                    Width="*" />
+                    <DataGridTextColumn
+                        Header="Price"
+                        Binding="{Binding Product.Price, StringFormat=C}"
+                        Width="Auto" />
 
-                <DataGridTextColumn
-                    Header="Price"
-                    Binding="{Binding Product.Price, StringFormat=C}"
-                    Width="Auto" />
+                    <DataGridTextColumn
+                        Header="Stock"
+                        Binding="{Binding Stock}"
+                        Width="Auto">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Stock}" Value="0">
+                                        <Setter Property="Foreground" Value="Red"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
-                <DataGridTextColumn
-                    Header="Stock"
-                    Binding="{Binding Stock}"
-                    Width="Auto" />
+                    <DataGridTextColumn
+                        Header="Updated"
+                        Binding="{Binding UpdatedAt, StringFormat=yyyy-MM-dd HH:mm}"
+                        Width="*" />
 
-                <DataGridTextColumn
-                    Header="Updated"
-                    Binding="{Binding UpdatedAt, StringFormat=yyyy-MM-dd HH:mm}"
-                    Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
 
-            </DataGrid.Columns>
-        </DataGrid>
+            <StackPanel Grid.Row="3"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+                <Button Content="Previous"
+                        Width="80"
+                        Margin="5"
+                        Command="{Binding PreviousCommand}" />
+                <TextBlock Text="{Binding PageDisplay}"
+                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                           VerticalAlignment="Center"
+                           Margin="10,0" />
+                <Button Content="Next"
+                        Width="80"
+                        Margin="5"
+                        Command="{Binding NextCommand}" />
+            </StackPanel>
+            <TextBlock
+                Grid.Row="3"
+                HorizontalAlignment="Right"
+                Margin="0,10,0,0"
+                FontSize="16"
+                FontWeight="Bold"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                Text="{Binding TotalUnits, StringFormat=Total Units: {0}}" />
+        </Grid>
 
-        <StackPanel Grid.Row="3"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Center">
-            <Button Content="Previous"
-                    Width="80"
-                    Margin="5"
-                    Command="{Binding PreviousCommand}" />
-            <TextBlock Text="{Binding PageDisplay}"
-                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       VerticalAlignment="Center"
-                       Margin="10,0" />
-            <Button Content="Next"
-                    Width="80"
-                    Margin="5"
-                    Command="{Binding NextCommand}" />
-        </StackPanel>
-        <TextBlock
-            Grid.Row="3"
-            HorizontalAlignment="Right"
-            Margin="0,10,0,0"
-            FontSize="16"
-            FontWeight="Bold"
-            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-            Text="{Binding TotalUnits, StringFormat=Total Units: {0}}" />
+        <Grid Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ProgressBar IsIndeterminate="True"
+                         Width="200"
+                         Height="20"
+                         VerticalAlignment="Center"
+                         HorizontalAlignment="Center" />
+        </Grid>
     </Grid>
 </Page>
