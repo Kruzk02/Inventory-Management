@@ -4,15 +4,46 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:InventoryManagement.Views"
+        xmlns:viewModels="clr-namespace:InventoryManagement.ViewModels"
         mc:Ignorable="d"
-        Title="InventoryDetailView" Height="450" Width="800" d:DataContext="{d:DesignInstance }">
-    <Grid>
-        <StackPanel Margin="20">
+        Title="InventoryDetailView" Height="450" Width="800" d:DataContext="{d:DesignInstance Type=viewModels:InventoryDetailViewModel}"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
 
-            <TextBox Text="{Binding ProductName}" />
-            <TextBox Text="{Binding CategoryName}" />
-            <TextBox Text="{Binding Price}" />
-            <TextBox Text="{Binding Stock}" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="Inventory detail"
+                   Grid.Row="0" Grid.ColumnSpan="2"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   Margin="0,0,0,20"/>
+
+        <TextBlock Text="Product" Grid.Row="1" Grid.Column="0" Margin="0,5"/>
+        <TextBox Text="{Binding ProductName}" Grid.Row="1" Grid.Column="1" Margin="0,5"/>
+
+        <TextBlock Text="Category" Grid.Row="2" Grid.Column="0" Margin="0,5"/>
+        <TextBox Text="{Binding CategoryName}" Grid.Row="2" Grid.Column="1" Margin="0,5"/>
+
+        <TextBlock Text="Price" Grid.Row="3" Grid.Column="0" Margin="0,5"/>
+        <TextBox Text="{Binding Price, ValidatesOnDataErrors=True}" Grid.Row="3" Grid.Column="1" Margin="0,5"/>
+
+        <TextBlock Text="Stock" Grid.Row="4" Grid.Column="0" Margin="0,5"/>
+        <TextBox Text="{Binding Stock, ValidatesOnDataErrors=True}" Grid.Row="4" Grid.Column="1" Margin="0,5"/>
+        
+        <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Content="Save" Command="{Binding SaveCommand}" Margin="0,0,10,0"/>
+            <Button Content="Cancel" Command="{Binding CancelCommand}"/>
         </StackPanel>
     </Grid>
 </Window>
