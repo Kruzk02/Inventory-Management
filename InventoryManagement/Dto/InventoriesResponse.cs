@@ -2,4 +2,4 @@
 
 namespace InventoryManagement.Dto;
 
-public record InventoryResponse(int Total, List<Inventory> Data);
+public record InventoriesResponse(int Total, List<Inventory> Data);
