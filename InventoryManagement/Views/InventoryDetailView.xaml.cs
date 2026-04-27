@@ -8,4 +8,9 @@ public partial class InventoryDetailView : Window
     {
         InitializeComponent();
     }
+
+    private void Cancel_click(object sender, RoutedEventArgs e)
+    {
+        this.Close();
+    }
 }

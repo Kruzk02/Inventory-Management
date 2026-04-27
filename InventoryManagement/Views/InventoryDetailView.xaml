@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:InventoryManagement.Views"
         xmlns:viewModels="clr-namespace:InventoryManagement.ViewModels"
         mc:Ignorable="d"
-        Title="InventoryDetailView" Height="450" Width="800" d:DataContext="{d:DesignInstance Type=viewModels:InventoryDetailViewModel}"
+        Title="InventoryDetailView" Height="350" Width="600" d:DataContext="{d:DesignInstance Type=viewModels:InventoryDetailViewModel}"
         WindowStartupLocation="CenterScreen">
     <Grid Margin="20">
         <Grid.RowDefinitions>
@@ -43,7 +43,7 @@
         
         <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
             <Button Content="Save" Command="{Binding SaveCommand}" Margin="0,0,10,0"/>
-            <Button Content="Cancel" Command="{Binding CancelCommand}"/>
+            <Button Content="Cancel" IsCancel="True" Click="Cancel_click"/>
         </StackPanel>
     </Grid>
 </Window>
