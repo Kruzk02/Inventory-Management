@@ -104,7 +104,7 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
     {
         if (SelectedInventory != null)
         {
-            var vm = new InventoryDetailViewModel(SelectedInventory);
+            var vm = new InventoryDetailViewModel(SelectedInventory, _inventoryService);
 
             var window = new InventoryDetailView
             {
