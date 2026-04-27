@@ -19,21 +19,10 @@ public class InventoryService(IHttpClientFactory httpClientFactory) : IInventory
     public async Task<bool> Update(int id, InventoryDto inventoryDto)
     {
         var client = httpClientFactory.CreateClient("api");
-        
+    
         var content = JsonContent.Create(inventoryDto);
-        
         var response = await client.PutAsync($"inventory/{id}", content);
-        
-        if (!response.IsSuccessStatusCode)
-        {
-            return false;
-        }
-        
-        if (response.Content.Headers.ContentLength == 0)
-        {
-            return true;
-        }
-        
-        return await response.Content.ReadFromJsonAsync<bool>();
+
+        return response.IsSuccessStatusCode;
     }
 }
