@@ -15,6 +15,7 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
     private Task Reload() => LoadInventories(_searchQuery, Take, (Page - 1) * Take);
     private string? _searchQuery;
     private CancellationTokenSource? _cts;
+    private User? _user;
 
     public ObservableCollection<Inventory> Inventories { get; set; } = [];
     public RelayCommand NextCommand { get; }
@@ -89,7 +90,7 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
         set => SetField(ref field, value);
     }
 
-    public InventoryViewModel(IInventoryService invService)
+    public InventoryViewModel(IInventoryService invService, IAuthService authService)
     {
         _inventoryService = invService;
 
@@ -98,13 +99,19 @@ public sealed class InventoryViewModel : INotifyPropertyChanged
         OpenDetailsCommand = new RelayCommand(_ => OpenDetails(), _ => SelectedInventory != null);
 
         _ = Reload();
+        _ = GetUserInfo(authService);
+    }
+
+    private async Task GetUserInfo(IAuthService authService)
+    {
+        _user = await authService.GetCurrentUserInfo();
     }
 
     private void OpenDetails()
     {
         if (SelectedInventory != null)
         {
-            var vm = new InventoryDetailViewModel(SelectedInventory, _inventoryService);
+            var vm = new InventoryDetailViewModel(SelectedInventory, _inventoryService, _user);
 
             var window = new InventoryDetailView
             {

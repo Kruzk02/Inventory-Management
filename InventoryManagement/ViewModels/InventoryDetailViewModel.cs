@@ -9,30 +9,32 @@ using InventoryManagement.Services;
 
 namespace InventoryManagement.ViewModels;
 
-public class InventoryDetailViewModel : INotifyPropertyChanged
+public sealed class InventoryDetailViewModel : INotifyPropertyChanged
 {
     public string ProductName { get; set; }
     public string? CategoryName { get; set; }
     public decimal Price { get; set; }
     public int Stock { get; set; }
-    
+
+    public bool IsAdmin { get; set; }
     public ICommand SaveCommand { get; }
 
-    private Inventory _inventory;
-    private IInventoryService _inventoryService;
-    
-    public InventoryDetailViewModel(Inventory inventory, IInventoryService inventoryService)
+    private readonly Inventory _inventory;
+    private readonly IInventoryService _inventoryService;
+
+    public InventoryDetailViewModel(Inventory inventory, IInventoryService inventoryService, User user)
     {
         ProductName = inventory.Product.Name;
         CategoryName = inventory.Product.Category.Name;
         Price = inventory.Product.Price;
         Stock = inventory.Stock;
-        
+
         _inventory = inventory;
 
         SaveCommand = new AsyncRelayCommand(Save);
-        
+
         _inventoryService = inventoryService;
+        IsAdmin = user.Roles.Contains("Admin");
     }
 
     private async Task Save(object? parameter)
@@ -43,7 +45,8 @@ public class InventoryDetailViewModel : INotifyPropertyChanged
             var isUpdated = await _inventoryService.Update(_inventory.Id, inventoryDto);
             if (isUpdated)
             {
-                MessageBox.Show("Data update successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Data update successfully!", "Success", MessageBoxButton.OK,
+                    MessageBoxImage.Information);
             }
             else
             {
@@ -51,15 +54,15 @@ public class InventoryDetailViewModel : INotifyPropertyChanged
             }
         }
     }
-    
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value)) return false;
         field = value;
